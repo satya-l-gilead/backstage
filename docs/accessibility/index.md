@@ -37,7 +37,7 @@ If your plugin lives in the [Backstage main repository](https://github.com/backs
   },
 ```
 
-To make sure the [Accessibility Github workflow](https://github.com/backstage/backstage/blob/10759b6ad2561bd86183ad940256f9a309c7a6b0/.github/workflows/verify_accessibility.yml) is running when changes are made to your plugin folders, also modify the [list of paths](https://github.com/backstage/backstage/blob/10759b6ad2561bd86183ad940256f9a309c7a6b0/.github/workflows/verify_accessibility.yml#L7-L16).
+To make sure the [Accessibility Github workflow](https://github.com/backstage/backstage/blob/master/.github/workflows/verify_accessibility.yml) is running when changes are made to your plugin folders, also modify the [list of paths](https://github.com/backstage/backstage/blob/10759b6ad2561bd86183ad940256f9a309c7a6b0/.github/workflows/verify_accessibility.yml#L7-L16).
 
 ### Run the Lighthouse CLI locally when developing new features
 
@@ -51,7 +51,7 @@ yarn dlx @lhci/cli@0.11.x autorun
 
 ### Use Lighthouse Github Action on your own repo
 
-If your Backstage plugin lives outside of the [Backstage main repository](https://github.com/backstage/backstage/), and you use Github Actions for continuous integration, we encourage you to add and modify the [Accessibility Github workflow](https://github.com/backstage/backstage/blob/10759b6ad2561bd86183ad940256f9a309c7a6b0/.github/workflows/verify_accessibility.yml) to your needs.
+If your Backstage plugin lives outside of the [Backstage main repository](https://github.com/backstage/backstage/), and you use Github Actions for continuous integration, we encourage you to add and modify the [Accessibility Github workflow](https://github.com/backstage/backstage/blob/master/.github/workflows/verify_accessibility.yml) to your needs.
 
 ### Report identified issues
 
