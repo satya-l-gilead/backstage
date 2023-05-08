@@ -1,5 +1,13 @@
 # @backstage/plugin-tech-radar
 
+## 0.6.4-next.2
+
+### Patch Changes
+
+- be4fa53fab8: Fix description links when clicking entry in radar.
+- Updated dependencies
+  - @backstage/core-components@0.13.1-next.1
+
 ## 0.6.4-next.1
 
 ### Patch Changes

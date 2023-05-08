@@ -1,5 +1,17 @@
 # @backstage/plugin-kubernetes
 
+## 0.9.0-next.2
+
+### Patch Changes
+
+- c7bad1005ba: The Kubernetes plugin now requests AKS access tokens from Azure when retrieving
+  objects from clusters configured with `authProvider: aks` and sets `auth.aks` in
+  its request bodies appropriately.
+- Updated dependencies
+  - @backstage/core-components@0.13.1-next.1
+  - @backstage/plugin-kubernetes-common@0.6.3-next.0
+  - @backstage/plugin-catalog-react@1.6.0-next.2
+
 ## 0.9.0-next.1
 
 ### Minor Changes

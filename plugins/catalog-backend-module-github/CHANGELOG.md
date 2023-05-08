@@ -1,5 +1,16 @@
 # @backstage/plugin-catalog-backend-module-github
 
+## 1.0.0-next.2
+
+### Major Changes
+
+- bd101cefd37: Updated the `team.edited` event emitted from `GithubOrgEntityProvider` to also include teams description.
+
+### Patch Changes
+
+- Updated dependencies
+  - @backstage/plugin-catalog-backend@1.9.1-next.2
+
 ## 0.2.8-next.1
 
 ### Patch Changes

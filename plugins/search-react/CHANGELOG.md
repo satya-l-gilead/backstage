@@ -1,5 +1,17 @@
 # @backstage/plugin-search-react
 
+## 1.6.0-next.2
+
+### Minor Changes
+
+- 1ce7f84b2e8: <SearchBar/> accepts InputProp property that can override keys from default
+
+### Patch Changes
+
+- adb31096bc2: Fix text-overflow UI issue for Lifecycle spans in SearchFilter checkbox labels.
+- Updated dependencies
+  - @backstage/core-components@0.13.1-next.1
+
 ## 1.6.0-next.1
 
 ### Patch Changes
