@@ -1,0 +1,18 @@
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.dpSpaceName }}-space
+  description: This component creates required infra space to create a Data Product Space in the DnA Platform
+  version: 1.0.0
+  owner: slolla-tw
+  tags:
+    - backstage
+    - component
+  links:
+    - url: https://github.com/${{ values.owner }}?tab=repositories
+spec:
+  type: website
+  lifecycle: production
+  owner: ${{ values.owner }}
+  system: public-websites

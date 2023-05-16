@@ -1,0 +1,166 @@
+# Notice the v1beta3 version
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+# some metadata about the template itself
+metadata:
+  name: dpspace-onboarding
+  title: DP Space creation request
+  description: This is a service Request for creating a data product space in Gilead's DnA Platform
+  tags:
+    - dpspace
+    - dna
+    - datamesh
+    - new
+spec:
+  owner: backstage/gilead
+  type: service
+
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+    - title: Data Product space creation steps
+      required:
+        - dpSpaceName
+        - domainName
+      properties:
+        domainName:
+          title: Domain Name
+          type: string
+          description: Name of the Domain
+          ui:autofocus: true
+          enum:
+            - 'Pharma Development & Manufacturing'
+            - 'Commercial'
+            - 'GnA - HR'
+            - 'GnA - Financial'
+            - 'GnA - Corp Operations'
+            - 'GnA - IT PMO'
+            - 'Medical Affairs'
+            - 'Public Affairs'
+            - 'Compliance'
+            - 'Governance'
+
+        dpSpaceName:
+          title: Data Product Space Name
+          type: string
+          ui:field: EntityNamePicker
+          description: Name of the data product space
+          ui:autofocus: false
+          ui:options:
+            rows: 5
+
+
+    - title: Add the user details
+      required:
+        - userDetails
+      properties:
+        userDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              gileadID:
+                title: Gilead ID
+                desc: Enter the user's Gilead Git ID
+                type: string
+                ui:field: OwnerPicker
+                ui:options:
+                  allowedKinds:
+                    - User
+                  allowedMetadata:
+                    - name
+                    - displayName
+                  allowedOutput:
+                    - name
+              
+              gitID:
+                title: Git ID
+                desc: Enter the user's Gilead ID
+                type: string
+
+    - title: Choose your starter kit(s)
+      required:
+        - starterKits
+      properties:
+        starterKits:
+          title: Select your starter kits
+          type: array
+          items:
+            type: string
+            enum:
+              - Query Starburst
+              - Auto loader example
+              - SCD2 - Merge Example
+              - Publish table to unity
+              - Publish table to Glue
+          uniqueItems: true
+          ui:widget: checkboxes
+          ui:options: defaultChecked
+
+
+    - title: Choose billing details
+      required:
+        - costCenterCode
+      properties:
+        costCenterCode:
+          title: Cost Center Code
+          type: string
+
+    # - title: Environments
+    #   properties:
+    #     envName:
+    #       title: Select environments
+    #       type: array
+    #       items:
+    #         type: string
+    #         enum:
+    #           - production
+    #           - staging
+    #           - development
+    #       uniqueItems: true
+    #       ui:widget: checkboxes
+
+
+  # here's the steps that are executed in series in the scaffolder backend
+  steps:
+    - id: fetch-base
+      name: Fetch Template for DP Space
+      action: fetch:template
+      input:
+        url: ./dp-code-template
+        values:
+          dpSpaceName: ${{ parameters.dpSpaceName }}
+          # owner: ${{ (parameters.repoUrl | parseRepoUrl)["owner"] }}
+          owner: 'slolla-tw'
+          repoUrl: github.com?owner=slolla-tw&repo=${{ parameters.dpSpaceName }}
+    
+    #    - id: sleep
+    #      name: Sleep
+    #      action: roadiehq:utils:sleep
+    #      input:
+    #        amount: 500
+
+
+    - id: publish
+      name: Submitting for approval
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: This is ${{ parameters.dpSpaceName }}
+        repoUrl: github.com?owner=slolla-tw&repo=${{ parameters.dpSpaceName }}
+  
+
+    - id: register
+      name: Register the space
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  # some outputs which are saved along with the job for use in the frontend
+  output:
+    links:
+      - title: Jira Workflow
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
