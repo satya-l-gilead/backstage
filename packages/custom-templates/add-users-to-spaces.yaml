@@ -4,8 +4,8 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: add-users-to-spaces
-  title: Add users to a DP space
-  description: This is a service request for adding input users to a data product space. This will automatically create IDMC requests to get users access to the data products that are part of this product space.
+  title: Add users to a Product space
+  description: This is a service request for adding input users to a product space. This will automatically create IDMC requests to get users access to the data products that are part of this product space.
   tags:
     - dpspace
     - dna
@@ -30,7 +30,7 @@ spec:
             - development
           ui:autofocus: true
 
-    - title: Data Product space
+    - title: Product Space
       required:
         - dpSpaceName
       properties:
@@ -52,9 +52,9 @@ spec:
             - 'Governance'
         
         dpSpaceName:
-          title: Data Product Space Name
+          title: Product Space Name
           type: string
-          description: Select the DP space name
+          description: Select the Product Space Name
           ui:field: EntityNamePicker
           # Show only Component type items in the field
           ui:options:

@@ -3,7 +3,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: ${{ values.dpSpaceName }}-space
-  description: This component creates required infra space to create a Data Product Space in the DnA Platform
+  description: This component creates required infra space to create a Product Space in the DnA Platform
   version: 1.0.0
   owner: ${{ values.owner }}
   tags:

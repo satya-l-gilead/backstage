@@ -4,8 +4,8 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: dpspace-onboarding
-  title: DP Space creation request
-  description: This is a service Request for creating a data product space in Gilead's DnA Platform
+  title: Product Space creation request
+  description: This is a service Request for creating a product space in Gilead's DnA Platform
   tags:
     - dpspace
     - dna
@@ -17,7 +17,7 @@ spec:
 
   # these are the steps which are rendered in the frontend with the form input
   parameters:
-    - title: Data Product space creation steps
+    - title: Product space creation steps
       required:
         - dpSpaceName
         - domainName
@@ -40,10 +40,10 @@ spec:
             - 'Governance'
 
         dpSpaceName:
-          title: Data Product Space Name
+          title: Product Space Name
           type: string
           ui:field: EntityNamePicker
-          description: Name of the data product space
+          description: Name of the product space
           ui:autofocus: false
           ui:options:
             rows: 5
@@ -123,7 +123,7 @@ spec:
   # here's the steps that are executed in series in the scaffolder backend
   steps:
     - id: fetch-base
-      name: Fetch Template for DP Space
+      name: Fetch Template for Product Space
       action: fetch:template
       input:
         url: ./dp-code-template

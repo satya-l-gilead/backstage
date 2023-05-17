@@ -4,8 +4,8 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: add-dps-to-spaces
-  title: Add Input Data Products to a DP space
-  description: This is a service request for adding input data products to a data product space.
+  title: Add Input Data Products to a Product Space
+  description: This is a service request for adding input data products to a product space.
   tags:
     - dpspace
     - dna
@@ -91,14 +91,14 @@ spec:
                     uniqueItems: true
                     ui:widget: checkboxes
 
-    - title: Data Product space
+    - title: Product space
       required:
         - dpSpaceName
       properties:
         dpSpaceName:
-          title: Data Product Space Name
+          title: Product Space Name
           type: string
-          description: Select the DP space name
+          description: Select the Product Space Nname
           ui:field: EntityPicker
           # Show only Component type items in the field
           ui:options:
