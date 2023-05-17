@@ -1,0 +1,178 @@
+# Notice the v1beta3 version
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+# some metadata about the template itself
+metadata:
+  name: vendor-onboarding
+  title: Vendor onboarding template
+  description: Software template for onboarding a vendor into DnA's Data Marketplace
+  tags:
+    - vendor
+    - dna
+    - experimental
+spec:
+  owner: backstage/gilead
+  type: service
+
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+    - title: Vendor onboarding steps
+      required:
+        - vendorName
+        - domainName
+      properties:
+        domainName:
+          title: Domain Name
+          type: string
+          description: Name of the Domain
+          ui:autofocus: true
+          enum:
+            - 'Pharma Development & Manufacturing'
+            - 'Commercial'
+            - 'GnA - HR'
+            - 'GnA - Financial'
+            - 'GnA - Corp Operations'
+            - 'GnA - IT PMO'
+            - 'Medical Affairs'
+            - 'Public Affairs'
+            - 'Compliance'
+            - 'Governance'
+        vendorName:
+          title: Vendor Name
+          type: string
+          description: Name of the vendor to be onboarded
+          ui:autofocus: false
+          ui:options:
+            rows: 5
+
+
+    - title: Membership Details
+      properties:
+        idPairs:
+          title: Gilead ID, Git ID
+          description: "Enter your Gilead ID followed by Git ID separated by comma. (Hit Add Item to add a pair)"
+          type: array
+          items:
+            type: string
+
+    - title: Source Details (Vendor)
+      anyOf:
+        - title: S3 Push
+          properties:
+            fetchType:
+              type: string
+              default: 'S3 Push'
+              readOnly: true
+        - title: S3 Pull
+          properties:
+            fetchType:
+              type: string
+              default: 'S3 Pull'
+              readOnly: true
+            fileLoc:
+              title: S3 Source File Location
+              type: string
+            cronExpression:
+              title: Frequency of the S3 pull
+              type: string
+              ui:placeholder: 0 8 * * 1-5
+          required:
+            - fileLoc
+
+    - title: Destination details (LOB Domain)
+      required:
+        - AWSAccountNumber
+        - bucketName
+      properties:
+        costCenterName:
+          title: LOB Cost Center
+          type: string
+        AWSAccountNumber:
+          title: LOB AWS Account Number
+          type: string
+        bucketName:
+          title: S3 Destination file Location
+          type: string
+
+    # - title: Environments
+    #   properties:
+    #     name:
+    #       title: Select environments
+    #       type: array
+    #       items:
+    #         type: string
+    #         enum:
+    #           - production
+    #           - staging
+    #           - development
+    #       uniqueItems: true
+    #       ui:widget: checkboxes
+
+    # - title: Approval workflow
+    #   required:
+    #     - approverName
+    #     - approverEmail
+    #   properties:
+    #     approverName:
+    #       title: Approver Name
+    #       type: string
+    #     approverEmail:
+    #       title: Approver Email
+    #       type: string
+
+
+  # here's the steps that are executed in series in the scaffolder backend
+  steps:
+    # - id: fetch-base
+    #   name: Fetch Base
+    #   action: fetch:template
+    #   input:
+    #     url: ./vendor-template
+    #     values:
+    #       vendorName: ${{ parameters.vendorName }}
+    #       owner: ${{ (parameters.repoUrl | parseRepoUrl)["owner"] }}
+    #       repoUrl: ${{ parameters.repoUrl }}
+
+    # - id: publish
+    #   name: Publish
+    #   action: publish:github
+    #   input:
+    #     allowedHosts: ['github.com']
+    #     description: This is ${{ parameters.vendorName }}
+    #     repoUrl: ${{ parameters.repoUrl }}
+
+    - id: fetch-base
+      name: Fetch Template for Vendor Onboarding
+      action: fetch:template
+      input:
+        url: ./vendor-template
+        values:
+          vendorName: ${{ parameters.vendorName }}
+          # owner: ${{ (parameters.repoUrl | parseRepoUrl)["owner"] }}
+          owner: 'slolla-tw'
+          repoUrl: github.com?owner=slolla-tw&repo=${{ parameters.vendorName }}
+
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: [ 'github.com' ]
+        description: This is ${{ parameters.vendorName }}
+        repoUrl: github.com?owner=slolla-tw&repo=${{ parameters.vendorName }}
+
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  # some outputs which are saved along with the job for use in the frontend
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

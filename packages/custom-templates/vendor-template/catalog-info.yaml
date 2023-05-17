@@ -1,0 +1,23 @@
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.vendorName }}-vendor-onboarding
+  description: This component creates required infra space to onboard a Vendor into DnA platform (Marketplace)
+  version: 1.0.0
+  owner: slolla-tw
+  group: ${{ values.vendorName }}-dna-dp
+  tags:
+    - backstage
+    - component
+  links:
+    - url: https://github.com/${{ values.owner }}?tab=repositories
+spec:
+  type: component
+  lifecycle: production
+  owner: ${{ values.owner }}
+  system: dna
+  dependsOn: [component:commericial-analytics1-space]
+  # children: [backstage, other]
+  # members: [slolla, smathkur]
+

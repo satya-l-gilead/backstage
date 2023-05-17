@@ -1,0 +1,125 @@
+# Notice the v1beta3 version
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+# some metadata about the template itself
+metadata:
+  name: add-users-to-spaces
+  title: Add users to a Product space
+  description: This is a service request for adding input users to a product space. This will automatically create IDMC requests to get users access to the data products that are part of this product space.
+  tags:
+    - dpspace
+    - dna
+    - datamesh
+    - existing
+spec:
+  owner: backstage/gilead
+  type: service
+
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+
+    - title: Environment
+      properties:
+        envName:
+          title: Select environment
+          type: string
+          enum:
+            - production
+            - val
+            - test
+            - development
+          ui:autofocus: true
+
+    - title: Product Space
+      required:
+        - dpSpaceName
+      properties:
+        domainName:
+          title: Domain Name
+          type: string
+          description: Name of the Domain
+          ui:autofocus: true
+          enum:
+            - 'Pharma Development & Manufacturing'
+            - 'Commercial'
+            - 'GnA - HR'
+            - 'GnA - Financial'
+            - 'GnA - Corp Operations'
+            - 'GnA - IT PMO'
+            - 'Medical Affairs'
+            - 'Public Affairs'
+            - 'Compliance'
+            - 'Governance'
+        
+        dpSpaceName:
+          title: Product Space Name
+          type: string
+          description: Select the Product Space Name
+          ui:field: EntityNamePicker
+          # Show only Component type items in the field
+          ui:options:
+            catalogFilter:
+              kind: Component
+          ui:autofocus: true
+
+    - title: Add the user details
+      required:
+        - userDetails
+      properties:
+        userDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              gileadID:
+                title: Gilead ID
+                desc: Enter the user's Gilead ID
+                type: string
+              gitID:
+                title: Git ID
+                desc: Enter the user's Gilead Git ID
+                type: string
+                ui:field: OwnerPicker
+                ui:options:
+                  allowedKinds:
+                    - User
+                  allowedMetadata:
+                    - name
+                    - displayName
+                  allowedOutput:
+                    - name
+
+
+
+
+  # here's the steps that are executed in series in the scaffolder backend
+  steps:
+    - id: log
+      name: Submiting for approval
+      action: debug:log
+      input:
+        message: ${{ parameters.dpSpaceName }}
+        listWorkspace: true
+        extra: ${{ parameters }}
+
+    - id: sleep
+      name: Waiting for callback
+      action: debug:wait
+      input:
+        seconds: 5
+
+    - id: log2
+      name: Submitted
+      action: debug:log
+      input:
+        message: Submitted the request for access to input DP ports
+  
+  
+  # some outputs which are saved along with the job for use in the frontend
+  output:
+    links:
+      - title: View Access Request
+        url: https://dm-us.informaticacloud.com/identity-service/home
+      - title: Review space in catalog
+        icon: catalog
+        entityRef: ${{ parameters.dpSpaceName }}

@@ -1,0 +1,142 @@
+# Notice the v1beta3 version
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+# some metadata about the template itself
+metadata:
+  name: add-dps-to-spaces
+  title: Add Input Data Products to a Product Space
+  description: This is a service request for adding input data products to a product space.
+  tags:
+    - dpspace
+    - dna
+    - datamesh
+    - existing
+spec:
+  owner: gdna
+  type: service
+
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+    - title: Environment
+      required:
+        - environmentName
+      properties:
+        environmentName:
+          title: Select environment
+          type: string
+          enum:
+            - production
+            - val
+            - test
+            - development
+          ui:autofocus: true
+
+    - title: Select the Domain Name & DPs
+      required:
+        - dataProducts
+      properties:
+        dataProducts:
+          type: array
+          items:
+            type: object
+            anyOf:
+              - title: Pharma Development & Manufacturing
+                properties:
+                  domainName:
+                    type: string
+                    default: 'Pharma Development & Manufacturing'
+                    readOnly: true
+                  dataProduct:
+                    title: Data Products
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                        - PDM DP1
+                        - PDM DP2
+                    uniqueItems: true
+                    ui:widget: checkboxes
+
+              - title: Commercial
+                properties:
+                  domainName:
+                    type: string
+                    default: 'Commercial'
+                    readOnly: true
+                  dataProduct:
+                    title: Data Products
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                        - Comm DP1
+                        - Comm DP2
+                    uniqueItems: true
+                    ui:widget: checkboxes
+
+              - title: GnA - HR
+                properties:
+                  domainName:
+                    type: string
+                    default: 'GnA - HR'
+                    readOnly: true
+                  dataProduct:
+                    title: Data Products
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                        - Gna DP1
+                        - Gna DP2
+                    uniqueItems: true
+                    ui:widget: checkboxes
+
+    - title: Product space
+      required:
+        - dpSpaceName
+      properties:
+        dpSpaceName:
+          title: Product Space Name
+          type: string
+          description: Select the Product Space Nname
+          ui:field: EntityPicker
+          # Show only Component type items in the field
+          ui:options:
+            catalogFilter:
+              kind: Component
+          ui:autofocus: true
+
+
+
+
+  # here's the steps that are executed in series in the scaffolder backend
+  steps:
+    - id: log
+      name: Submiting for approval
+      action: debug:log
+      input:
+        message: ${{ parameters.dpSpaceName }}
+        listWorkspace: true
+        extra: ${{ parameters }}
+
+    - id: sleep
+      name: Waiting for callback
+      action: debug:wait
+      input:
+        seconds: 5
+
+    - id: log2
+      name: Submitted
+      action: debug:log
+      input:
+        message: Submitted the request for access to input DP ports
+  
+  
+  # some outputs which are saved along with the job for use in the frontend
+  output:
+    links:
+      - title: View Access Request
+        url: https://dm-us.informaticacloud.com/identity-service/home
+      - title: Review space in catalog
+        icon: catalog
+        entityRef: ${{ parameters.dpSpaceName }}

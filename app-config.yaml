@@ -1,5 +1,5 @@
 app:
-  title: Backstage Example App
+  title: Gilead DnA DPD Portal
   baseUrl: http://localhost:3000
   #datadogRum:
   #  clientToken: '123456789'
@@ -31,16 +31,20 @@ backend:
   listen:
     port: 7007
   database:
-    client: better-sqlite3
-    connection: ':memory:'
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASS}
   cache:
     store: memory
   cors:
     origin: http://localhost:3000
-    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    methods: [ GET, HEAD, PATCH, POST, PUT, DELETE ]
     credentials: true
   csp:
-    connect-src: ["'self'", 'http:', 'https:']
+    connect-src: [ "'self'", 'http:', 'https:' ]
     # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
     # Default Helmet Content-Security-Policy values can be removed by setting the key to false
   reading:
@@ -90,14 +94,14 @@ proxy:
 
   '/sentry/api':
     target: https://sentry.io/api/
-    allowedMethods: ['GET']
+    allowedMethods: [ 'GET' ]
     headers:
       Authorization: ${SENTRY_TOKEN}
 
   '/ilert':
     target: https://api.ilert.com
-    allowedMethods: ['GET', 'POST', 'PUT']
-    allowedHeaders: ['Authorization']
+    allowedMethods: [ 'GET', 'POST', 'PUT' ]
+    allowedHeaders: [ 'Authorization' ]
     headers:
       Authorization: ${ILERT_AUTH_HEADER}
 
@@ -108,8 +112,8 @@ proxy:
 
   '/gocd':
     target: https://your.gocd.instance.com/go/api
-    allowedMethods: ['GET']
-    allowedHeaders: ['Authorization']
+    allowedMethods: [ 'GET' ]
+    allowedHeaders: [ 'Authorization' ]
     headers:
       Authorization: Basic ${GOCD_AUTH_CREDENTIALS}
 
@@ -124,7 +128,7 @@ proxy:
       St2-Api-Key: ${ST2_API_KEY}
 
 organization:
-  name: My Company
+  name: Gilead DnA
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
@@ -163,7 +167,7 @@ kubernetes:
     type: 'multiTenant'
   clusterLocatorMethods:
     - type: 'config'
-      clusters: []
+      clusters: [ ]
 
 kafka:
   clientId: backstage
@@ -226,22 +230,22 @@ catalog:
 
   processors:
     ldapOrg:
-      ### Example for how to add your enterprise LDAP server
-      # providers:
-      #   - target: ldaps://ds.example.net
-      #     bind:
-      #       dn: uid=ldap-reader-user,ou=people,ou=example,dc=example,dc=net
-      #       secret: ${LDAP_SECRET}
-      #     users:
-      #       dn: ou=people,ou=example,dc=example,dc=net
-      #       options:
-      #         filter: (uid=*)
-      #       map:
-      #         description: l
-      #     groups:
-      #       dn: ou=access,ou=groups,ou=example,dc=example,dc=net
-      #       options:
-      #         filter: (&(objectClass=some-group-class)(!(groupType=email)))
+    ### Example for how to add your enterprise LDAP server
+    # providers:
+    #   - target: ldaps://ds.example.net
+    #     bind:
+    #       dn: uid=ldap-reader-user,ou=people,ou=example,dc=example,dc=net
+    #       secret: ${LDAP_SECRET}
+    #     users:
+    #       dn: ou=people,ou=example,dc=example,dc=net
+    #       options:
+    #         filter: (uid=*)
+    #       map:
+    #         description: l
+    #     groups:
+    #       dn: ou=access,ou=groups,ou=example,dc=example,dc=net
+    #       options:
+    #         filter: (&(objectClass=some-group-class)(!(groupType=email)))
 
   locations:
     # Add a location here to ingest it, for example from a URL:
@@ -272,20 +276,40 @@ catalog:
     - type: file
       target: ../../plugins/techdocs-backend/examples/documented-component/catalog-info.yaml
     # Backstage example templates
-    - type: file
-      target: ../../plugins/scaffolder-backend/sample-templates/all-templates.yaml
-      rules:
-        - allow: [Template]
+    #    - type: file
+    #      target: ../../plugins/scaffolder-backend/sample-templates/all-templates.yaml
+    #      rules:
+    #        - allow: [ Template ]
     # Backstage end-to-end tests of TechDocs
     - type: file
       target: ../../cypress/e2e-fixture.catalog.info.yaml
+
+    #    - type: file
+    #      target: ../../packages/custom-templates/vendor-onboard.yaml
+    #      rules:
+    #        - allow: [ Template ]
+
+    - type: file
+      target: ../../packages/custom-templates/dbks-dbspace.yaml
+      rules:
+        - allow: [ Template ]
+    - type: file
+      target: ../../packages/custom-templates/add-dps-to-spaces.yaml
+      rules:
+        - allow: [ Template ]
+
+    - type: file
+      target: ../../packages/custom-templates/add-users-to-spaces.yaml
+      rules:
+        - allow: [ Template ]
+
 scaffolder:
-  # Use to customize default commit author info used when new components are created
-  # defaultAuthor:
-  #   name: Scaffolder
-  #   email: scaffolder@backstage.io
-  # Use to customize the default commit message when new components are created
-  # defaultCommitMessage: 'Initial commit'
+# Use to customize default commit author info used when new components are created
+# defaultAuthor:
+#   name: Scaffolder
+#   email: scaffolder@backstage.io
+# Use to customize the default commit message when new components are created
+# defaultCommitMessage: 'Initial commit'
 
 auth:
   ### Add auth.keyStore.provider to more granularly control how to store JWK data when running
@@ -375,7 +399,7 @@ auth:
         clientSecret: ${AUTH_ATLASSIAN_CLIENT_SECRET}
         scopes: ${AUTH_ATLASSIAN_SCOPES}
     myproxy:
-      development: {}
+      development: { }
 costInsights:
   engineerCost: 200000
   engineerThreshold: 0.5

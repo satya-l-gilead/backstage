@@ -1,0 +1,44 @@
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.dpSpaceName }}-space
+  description: This component creates required infra space to create a Product Space in the DnA Platform
+  version: 1.0.0
+  owner: ${{ values.owner }}
+  tags:
+    - backstage
+    - component
+  links:
+    - url: https://github.com/${{ values.owner }}/${{ values.dpSpaceName }}
+      title: Code Repo
+      icon: github
+      type: sourcecode
+    - url: https://databricks-workspace-name.gilead.com
+      title: Databricks workspace
+      icon: menubook
+      type: workspace
+# relations:
+#   - type: ownedBy
+#     targetRef: group:default/guests
+#     target:
+#       kind: group
+#       namespace: default
+#       name: guests
+#   - type: partOf
+#     targetRef: system:default/dna
+#     target:
+#       kind: system
+#       namespace: default
+#       name: dna
+  # - type: parentOf
+  #   targetRef: 
+  #   target:
+  #     kind: api
+  #     namespace: default
+  #     name: infra-api
+spec:
+  type: product-space
+  lifecycle: development
+  owner: ${{ values.owner }}
+  system: dna-data-mesh
